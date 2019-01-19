@@ -1,6 +1,6 @@
 {
-  "name": "greeter-bot",
-  "version": "1.0.0",
+  "name": "Hawkobot",
+  "version": "1.1.0",
   "description": "Destiny Bot",
   "main": "bot.js",
   "author": "Jacob Young",
