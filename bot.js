@@ -10,6 +10,7 @@ logger.add(new logger.transports.Console, {
     colorize: true
 });
 logger.level = 'debug';
+
 // Initialize Discord Bot
 var bot = new Discord.Client({
    token: auth.token,
@@ -39,24 +40,25 @@ bot.on('message', function (user, userID, channelID, message, evt) {
             // !destiny
             case 'destiny':
                 var xhr = new XMLHttpRequest();
-                var responseObject;
+
                 xhr.onload = function() {
-                    if (this.status = 200)
-                        responseObject = JSON.parse(this.responseText);
-                    if (this.status = 400)
+                   if (this.status == 200 && this.readyState == 4) {
+                        var json = JSON.parse(this.responseText);
                         bot.sendMessage({
                           to: channelID,
-                          message: 'Bad Request'
+                          message: json.Response[0].displayName
+                        });
+                    }
+                    else
+                        bot.sendMessage({
+                          to: channelID,
+                          message: 'Bad Request, Error ' + this.status
                         })
-                }
-                xhr.open('GET', 'https://www.bungie.net/Platform/Destiny2/SearchDestinyPlayer/4/SteveHybrid%231406/', false);
-                xhr.setRequestHeader(api.key, api.value);
-                xhr.send();
-                    bot.sendMessage({
-                        to: channelID,
-                        message: responseObject.Response[0]
-                    });
+                  }
 
+                  xhr.open("GET", "https://www.bungie.net/Platform/Destiny2/SearchDestinyPlayer/4/Hawkobo%231616/", true);
+                  xhr.setRequestHeader("X-API-KEY", api.key);
+                  xhr.send();
             break;
             // Just add any case commands if you want to..
          }
