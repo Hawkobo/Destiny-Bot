@@ -1,7 +1,7 @@
 var Discord = require('discord.io');
 var logger = require('winston');
-var auth = require('./auth.json');
-var api = require('./api.json');
+const auth = require('./auth.json');
+const api = require('./api.json');
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
 // Configure logger settings
@@ -24,12 +24,13 @@ bot.on('ready', function (evt) {
 bot.on('message', function (user, userID, channelID, message, evt) {
     // Our bot needs to know if it will execute a command
     // It will listen for messages that will start with `!`
-    if (message.substring(0, 1) == '!') {
+    if (message.substring(0, 1) == auth.prefix) {
         var args = message.substring(1).split(' ');
         var cmd = args[0];
         args = args.splice(1);
 
         switch(cmd) {
+            //!jojo
             case 'jojo':
                 bot.sendMessage({
                   to: channelID,
@@ -60,46 +61,70 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                           to: channelID,
                           message: 'Bad Request, Error ' + this.status
                         })
-                  }
+                }
 
-                  xhr.open("GET", "https://www.bungie.net/Platform/Destiny2/SearchDestinyPlayer/4/Hawkobo%231616/", true);
-                  xhr.setRequestHeader("X-API-KEY", api.key);
-                  xhr.send();
-                  break;
+                xhr.open("GET", "https://www.bungie.net/Platform/Destiny2/SearchDestinyPlayer/4/Hawkobo%231616/", true);
+                xhr.setRequestHeader("X-API-KEY", api.key);
+                xhr.send();
+                break;
+            // !throne
             case 'throne':
-                  var xhr = new XMLHttpRequest();
+                var profile = new XMLHttpRequest();
+                var id = new XMLHttpRequest();
 
-                  xhr.onload = function() {
-                      if (this.status == 200 && this.readyState == 4) {
-                          var json = JSON.parse(this.responseText);
-                          if (json.Response.profileRecords.data.records[1290451257].objectives[0].complete == true)
-                            bot.sendMessage({
-                              to: channelID,
-                              message: 'Congratulations! You\'ve done it solo!'
-                            });
-                          else {
-                            bot.sendMessage({
-                              to: channelID,
-                              message: 'Sorry, you haven\'t solo\'d it quite yet.'
-                            })
-                          }
-                      }
-                      else
+                var membershipId;
+
+                id.onload = function() {
+                    if (this.status == 200 && this.readyState == 4) {
+                        var json = JSON.parse(this.responseText);
+                        membershipId = json.Response[0].membershipId;
+                        console.log(membershipId);
+                    }
+                    else {
+                      bot.sendMessage({
+                        to: channelID,
+                        message: 'Bad Request, Error ' + this.status
+                      })
+                    }
+                }
+
+                profile.onload = function() {
+                    if (this.status == 200 && this.readyState == 4) {
+                        var json = JSON.parse(this.responseText);
+                        if (json.Response.profileRecords.data.records[1290451257].objectives[0].complete == true)
                           bot.sendMessage({
                             to: channelID,
-                            message: 'Bad Request, Error ' + this.status
+                            message: 'Congratulations! You\'ve done it solo!'
+                          });
+                        else {
+                          bot.sendMessage({
+                            to: channelID,
+                            message: 'Sorry, you haven\'t solo\'d it quite yet.'
                           })
+                        }
                     }
+                    else
+                        bot.sendMessage({
+                          to: channelID,
+                          message: 'Bad Request, Error ' + this.status
+                        })
+                }
 
-                    xhr.open("GET", "https://www.bungie.net/Platform/Destiny2/4/Profile/" + args[0] + "/?components=900", true);
-                    xhr.setRequestHeader("X-API-KEY", api.key);
-                    xhr.send();
-                    break;
+                id.open("GET", "https://www.bungie.net/Platform/Destiny2/SearchDestinyPlayer/4/" + args[0], true);
+                id.setRequestHeader("X-API-KEY", api.key);
+                id.send();
 
-            // case 'quit':
-            //       Client.destroy();
-            //       break;
-            // Just add any case commands if you want to..
+                profile.open("GET", "https://www.bungie.net/Platform/Destiny2/4/Profile/" + membershipId + "/?components=900", true);
+                profile.setRequestHeader("X-API-KEY", api.key);
+                profile.send();
+                break;
+            //!anything else
+            default:
+                  bot.sendMessage({
+                    to: channelID,
+                    message: 'Invalid command!'
+                  })
+                  break;
          }
      }
 });
