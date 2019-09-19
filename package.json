@@ -5,12 +5,8 @@
   "main": "index.js",
   "author": "Jacob Young",
   "dependencies": {
-    "ajax": "0.0.4",
-    "discord.io": "https://github.com/woor/discord.io/tarball/gateway_v6",
     "discord.js": "^11.5.1",
     "jquery": "^3.3.1",
-    "node.js": "0.0.0",
-    "winston": "^3.1.0",
-    "xmlhttprequest": "^1.8.0"
+    "node.js": "0.0.0"
   }
 }
