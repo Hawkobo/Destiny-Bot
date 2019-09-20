@@ -1,6 +1,6 @@
 var Discord = require('discord.io');
 var logger = require('winston');
-const auth = require('./auth.json');
+const auth = require('./config.json');
 const api = require('./api.json');
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
