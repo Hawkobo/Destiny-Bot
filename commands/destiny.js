@@ -8,7 +8,7 @@ module.exports = {
 	execute(message, args) {
 	var url = 'https://www.bungie.net/Platform/Destiny2/SearchDestinyPlayer/4/Hawkobo%231616'
 	var headers = {
-		"X-API-KEY": "561d624e6159478ba2012d98eb9db10c"
+		"X-API-KEY": key
 	}
 
 	fetch( url, { headers: headers })
