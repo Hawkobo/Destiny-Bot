@@ -6,8 +6,13 @@ module.exports = {
 	description: 'Returns user ID',
 
 	execute(message, args) {
-	const { file } = fetch('https://www.bungie.net/Platform/Destiny2/SearchDestinyPlayer/4/Hawkobo%231616', { method: 'GET', headers: {"X-API-KEY": "561d624e6159478ba2012d98eb9db10c"}}).then(response => response.json());
+	var url = 'https://www.bungie.net/Platform/Destiny2/SearchDestinyPlayer/4/Hawkobo%231616'
+	var headers = {
+		"X-API-KEY": "561d624e6159478ba2012d98eb9db10c"
+	}
 
-  message.channel.send(file);
+	fetch( url, { headers: headers })
+		.then(response => response.json())
+			.then(json => message.channel.send(json.Response[0].displayName))
 	},
 };

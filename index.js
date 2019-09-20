@@ -13,7 +13,7 @@ for (const file of commandFiles) {
 
 client.once("ready", () => {
   console.log('Hawkobot is online!');
-  client.user.setGame("on Destiny!")
+  client.user.setActivity("Destiny!")
 });
 
 client.on("message", async message => {
